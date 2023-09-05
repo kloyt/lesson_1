@@ -14,9 +14,9 @@ class LinearRegression:
     def fit(self, x, y):
         num_samples, num_features = x.shape
         self.model = nn.Linear(num_features, 1)
-
+        nn.init.xavier_uniform_(self.model.weight)
+        nn.init.constant_(self.model.bias, 0.0)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
-
         for _ in range(self.num_iterations):
             predictions = self.model(x)
             loss = self.criterion(predictions, y)
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     test_x = data[255:, 0:13]
     test_y = data[255:, 13].view(-1, 1)
 
-    model = LinearRegression(learning_rate=0.01, num_iterations=1000)
+    model = LinearRegression(learning_rate=0.01, num_iterations=100000)
     model.fit(train_x, train_y)
 
     test_predictions = model.predict(test_x)
