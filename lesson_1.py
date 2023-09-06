@@ -14,8 +14,8 @@ class LinearRegression:
     def fit(self, x, y):
         num_samples, num_features = x.shape
         self.model = nn.Linear(num_features, 1)
-        nn.init.xavier_uniform_(self.model.weight)
-        nn.init.constant_(self.model.bias, 0.0)
+        #nn.init.xavier_uniform_(self.model.weight)
+        #nn.init.constant_(self.model.bias, 0.0)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
         for _ in range(self.num_iterations):
             predictions = self.model(x)
@@ -32,13 +32,15 @@ class LinearRegression:
 if __name__ == '__main__':
     file = pd.read_csv("csv/housing.csv", delimiter=r'\s+')
     data = torch.tensor(file.values, dtype=torch.float32)
-    train_x = data[0:255, 0:13]
-    train_y = data[0:255, 13].view(-1, 1)
+    data = torch.nn.functional.normalize(data)
+    train_x = data[:, 0:13]
+    train_y = data[:, 13].view(-1, 1)
     test_x = data[255:, 0:13]
     test_y = data[255:, 13].view(-1, 1)
 
-    model = LinearRegression(learning_rate=0.01, num_iterations=100000)
+    model = LinearRegression(learning_rate=0.001, num_iterations=10000)
     model.fit(train_x, train_y)
 
     test_predictions = model.predict(test_x)
-    print("Test Predictions:", test_predictions)
+
+    print("Test Predictions:", test_predictions - test_y)
