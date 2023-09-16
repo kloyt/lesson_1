@@ -43,4 +43,4 @@ if __name__ == '__main__':
 
     test_predictions = model.predict(test_x)
 
-    print("Test Predictions:", test_predictions - test_y)
+    print("Test Predictions:", (test_predictions))
