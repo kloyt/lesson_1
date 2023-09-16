@@ -1,6 +1,7 @@
 import torch
 import pandas as pd
 import torch.nn as nn
+import matplotlib.pyplot as plt
 
 
 class LinearRegression:
@@ -14,8 +15,8 @@ class LinearRegression:
     def fit(self, x, y):
         num_samples, num_features = x.shape
         self.model = nn.Linear(num_features, 1)
-        #nn.init.xavier_uniform_(self.model.weight)
-        #nn.init.constant_(self.model.bias, 0.0)
+        nn.init.xavier_uniform_(self.model.weight)
+        nn.init.constant_(self.model.bias, 0.0)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
         for _ in range(self.num_iterations):
             predictions = self.model(x)
@@ -42,5 +43,10 @@ if __name__ == '__main__':
     model.fit(train_x, train_y)
 
     test_predictions = model.predict(test_x)
-
+    # Plot the regression line with actual data pointa
+    plt.plot(test_x, test_predictions, '+', label='Actual values')
+    plt.xlabel('Test input')
+    plt.ylabel('Test Output or Predicted output')
+    plt.legend()
+    plt.show()
     print("Test Predictions:", (test_predictions))
